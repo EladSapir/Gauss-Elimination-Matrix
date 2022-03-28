@@ -24,3 +24,24 @@ def matrixMul(matrixA, matrixB):
         return matrixC
     else:
         raise "Not NxN / same size"
+
+    def matrix_vectorMul(matrixA, vecA):
+        """
+        A function that multiplies a matrix and a vector and checks if they are: 1. Square matrix
+                                                                                 2. In the same size
+        ** If one of the two above is False the program will stop **
+        Then the function will multiply them according to the according to the multiplication algorithm
+        :param matrixA: The matrix is in the left side of the multiplication
+        :param vecA: The vector is in the right side of the multiplication
+        :return: A new vector, it represents the results
+        """
+        if len(matrixA) == len(vecA) and len(matrixA) == len(
+                matrixA[0]):  # checks the size of the matrix and the vector
+            for i in range(len(matrixA)):  # checks if the left matrix is square
+                if len(matrixA) != len(matrixA[i]):
+                    raise "Cant Multiply"
+        newVec = [0 for i in range(len(vecA))]  # Generating a new vector for the result
+        for i in range(len(matrixA)):  # multiplication according to the multiplication algorithm
+            for j in range(len(vecA)):
+                newVec[i] += matrixA[i][j] * vecA[j]
+        return
