@@ -87,3 +87,98 @@ def matrixMul(matrixA, matrixB):
             sub_det = determinant_recursive(As)
             total += sign * A[0][fc] * sub_det
         return total
+
+def matrixSolve(matrix, vecB):
+    """
+    A function that finds the solution of a systems of linear equations
+    :param matrix: A matrix that represent the values of the experiment
+    :param vecB: A vector that represent the results of the experiment
+    :return: A solution vector
+    """
+    elementary = []  # A List for all of the elementary matrices
+    matrixes = []  # A List for all of the mid matrices along the solution
+    matrixes.append(matrix)
+    for i in range(len(matrix)):  # Checks if the matrix and the vector are in a size that we can work with
+        if len(matrix) != len(matrix[i]) or len(matrix) != len(vecB):
+            raise "not NxN or vector is not the same size of matrix"
+    if determinant_recursive(matrix) != 0:  # Checks if there is a single solution according to the determinant
+        solve = I_matrix(matrix)
+        for i in range(len(matrix)):  # Applying Gauss Elimination
+            temp=i
+            flag=i
+            while temp<len(matrix):
+                if abs(matrix[temp][i])>abs(matrix[flag][i]):
+                    flag=temp
+                temp += 1
+            if flag!=i:
+                Imat=I_matrix(matrix)
+                temp1=Imat[i]
+                Imat[i]=Imat[flag]
+                Imat[flag]=temp1
+                elementary.append(Imat)
+                matrix = matrixMul(Imat, matrix)
+                matrixes.append(matrix)
+            if matrix[i][i] == 0.0 :  # In case the pivot is 0 or a very small number
+                k = i
+                while k < len(matrix) and matrix[k][i] == 0:  # finding the first raw that does not have a 0 ( in the current column )
+                    k += 1
+                temp = solve[i]
+                solve[i] = solve[k]
+                solve[k] = temp
+                elementary.append(solve)
+                matrix = matrixMul(solve, matrix)
+                matrixes.append(matrix)
+            if matrix[i][i] != 1:  # In case the pivot in the current raw is not 1
+                solve = I_matrix(matrix)
+                solve[i][i] = 1 / matrix[i][i]
+                elementary.append(solve)
+                matrix = matrixMul(solve, matrix)
+                matrix[i][i]=1
+                matrixes.append(matrix)
+            m = i + 1
+            while m < len(matrix):  # Turning to zero all the rows below ( in the current column )
+                if matrix[m][i] != 0 :
+                    solve = I_matrix(matrix)
+                    solve[m][i] = -matrix[m][i] / matrix[i][i]
+                    elementary.append(solve)
+                    matrix = matrixMul(solve, matrix)
+                    matrixes.append(matrix)
+                m = m + 1
+        n = len(matrix) - 1
+        while n >= 0:  # Obtaining Solution by Back Substitution
+            m = n - 1
+            while m >= 0:  # Turning to zero all the rows above ( in the current column )
+                if matrix[m][n] != 0 :
+                    solve = I_matrix(matrix)
+                    solve[m][n] = -matrix[m][n] / matrix[n][n]
+                    elementary.append(solve)
+                    matrix = matrixMul(solve, matrix)
+                    matrixes.append(matrix)
+                m = m - 1
+            n = n - 1
+        for i in elementary:  # Multiplying all the elementary matrices with the vector ( to get the solution vector )
+            vecB = matrix_vectorMul(i, vecB)
+        with open("output.txt",'w') as f:
+            f.write("The given matrix:\n\n")
+            writeMatrix(matrixes[0],f)
+            f.write("Gaussian elimination:\n\n")
+            for i in range(len(elementary)):
+                temp2='{}.'.format(i+1)
+                f.write(temp2)
+                f.write("\nElementary matrix:\n\n")
+                writeMatrix(elementary[i],f)
+                f.write("\n----------------------------------------------------------\n")
+                f.write("\nPrevious matrix:\n\n")
+                writeMatrix(matrixes[i],f)
+                f.write("\n----------------------------------------------------------\n")
+                f.write("\nResult of multiply:\n\n")
+                writeMatrix(matrixes[i+1],f)
+                f.write(f'\n------------------ end of stage {i+1} ----------------------\n\n')
+            f.write("\nResult:\n\n")
+            for i in range(len(vecB)):
+                temp3 = f'X{i+1} = {vecB[i]} '
+                f.write(temp3)
+
+        return vecB
+    else:
+        raise "Error"
