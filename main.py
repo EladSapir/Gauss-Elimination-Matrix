@@ -182,3 +182,51 @@ def matrixSolve(matrix, vecB):
         return vecB
     else:
         raise "Error"
+
+def printMatrix(matrix):
+    """
+    A function that prints a matrix
+    :param matrix: A matrix to print
+    :return:  No return value
+    """
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            print('{: ^20}'.format(matrix[i][j]), end="")
+        print('\n')
+
+def writeMatrix(matrix,f):
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            temp='{: ^22}'.format(matrix[i][j])
+            f.write(temp)
+        f.write('\n')
+
+
+def printVector(vec):
+    """
+    A function that prints a vector
+    :param vec: Vector to print
+    :return: No return value
+    """
+    for i in vec:
+        print(i)
+
+
+def Norm_Of_A_Matrix(matrix):
+    """
+    A function that calculates a norm of a matrix
+    :param matrix: A matrix
+    :return: The value of the norm
+    """
+    temp = [0 for x in range(len(matrix))]
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            temp[i] += abs(matrix[i][j])
+    return max(temp)
+
+X = [[8, 0.0001, 5,0.5],
+     [1.1213000001, 7, 6,0.365002],
+    [2, 0.24524242452, 5, 0.245],
+     [1,52.02222,4,5.36]]
+
+matrixSolve(X,[2,0.123456001,45.5632,0.142005])
