@@ -45,3 +45,14 @@ def matrixMul(matrixA, matrixB):
             for j in range(len(vecA)):
                 newVec[i] += matrixA[i][j] * vecA[j]
         return
+
+    def I_matrix(A):
+        """
+        A function that generates a I matrix
+        :param A: A matrix, used to make the I matrix the same size the parameter matrix
+        :return: I matrix in the same size as the given matrix (parameter)
+        """
+        matrixC = [[0 for x in range(len(A))] for y in range(len(A))]
+        for i in range(len(A)):
+            matrixC[i][i] = 1
+        return matrixC
