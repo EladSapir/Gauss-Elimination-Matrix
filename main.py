@@ -65,3 +65,25 @@ def matrixMul(matrixA, matrixB):
         """
         matrixC = [[A[y][x] for x in range(len(A))] for y in range(len(A))]
         return matrixC
+
+    def determinant_recursive(A, total=0):
+        """
+        A recursive function that calculates the determinant of a given matrix
+        :param A: A matrix
+        :param total: A parameter used in the function that hold the current total, it's default is zero
+        :return: The determinant of matrix A
+        """
+        indices = list(range(len(A)))
+        if len(A) == 2 and len(A[0]) == 2:
+            val = A[0][0] * A[1][1] - A[1][0] * A[0][1]
+            return val
+        for fc in indices:
+            As = copy_matrix(A)
+            As = As[1:]
+            height = len(As)
+            for i in range(height):
+                As[i] = As[i][0:fc] + As[i][fc + 1:]
+            sign = (-1) ** (fc % 2)
+            sub_det = determinant_recursive(As)
+            total += sign * A[0][fc] * sub_det
+        return total
