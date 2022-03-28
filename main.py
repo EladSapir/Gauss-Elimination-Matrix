@@ -56,3 +56,12 @@ def matrixMul(matrixA, matrixB):
         for i in range(len(A)):
             matrixC[i][i] = 1
         return matrixC
+
+    def copy_matrix(A):
+        """
+        A function that
+        :param A: A matrix to copy
+        :return: The new copied matrix
+        """
+        matrixC = [[A[y][x] for x in range(len(A))] for y in range(len(A))]
+        return matrixC
